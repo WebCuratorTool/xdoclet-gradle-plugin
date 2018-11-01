@@ -1,0 +1,23 @@
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    group 'org.webcurator.thirdparty.org.codehaus.mojo'
+    description = 'Gradle plugin that performs the equivalent of org.codehaus.mojo:xdoclet-maven-plugin:1.0'
+
+    project.ext {
+        vendor = "National Library of New Zealand"
+
+        versionNumber = "1.0.0-SNAPSHOT"
+    }
+
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+    configurations {
+        publishableArtifacts
+    }
+}

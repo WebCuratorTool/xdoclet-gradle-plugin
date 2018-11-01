@@ -1,0 +1,169 @@
+plugins {
+    // required for jacoco test coverage checks
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
+project.ext {
+    // TODO Will need tasks associated with jacoco to actually use these limits
+    // TODO Generally the goal here is to have code coverage in the 80--90% range
+    // but it may be better to approach this with a more directed focus
+    // (i.e. increase code coverage when new functionality is added)
+    // TODO Write unit tests!
+    codeCoverageLimits = [
+            'instruction': 0.0, // currently at 0.0%
+            'branch'     : 0.0, // currently at 0.0%
+            'line'       : 0.0, // currently at 0.0%
+            'complexity' : 0.0, // currently at 0.0%
+            'method'     : 0.0, // currently at 0.0%
+            'class'      : 0.0  // currently at 0.0%
+    ]
+}
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+// run the findBugs checks with 'gradle check' or 'gradle findBugsMain' or 'gradle findBugsTest'
+apply plugin: 'findbugs'
+
+// run the pmd source code analyzer with 'gradle check' or 'gradle pmdMain' or 'gradle pmdTest'
+apply plugin: 'pmd' // source code analyzer
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+setVersion(project.ext.versionNumber)
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://snapshots.repository.codehaus.org" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    compile gradleApi()
+
+    // We use the latest groovy 2.x version for building this library
+    // compile 'org.codehaus.groovy:groovy-all:2.4.+'
+    compile localGroovy()
+
+    // Use the latest version
+    compile "com.google.guava:guava:+"
+    // Use the latest version
+    compile "org.apache.commons:commons-lang3:+"
+    compile "commons-io:commons-io:2.+"
+
+    compileOnly 'org.slf4j:slf4j-api:1.7.+'
+
+    // latest version
+    testCompile 'junit:junit:4.12'
+
+    // latest version
+    testCompile 'org.mockito:mockito-all:1.10.19'
+
+    // use sl4j logging for tests
+    testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
+
+    compile group: 'ant', name: 'ant', version:'1.6.5'
+    compile group: 'org.apache.maven', name: 'maven-plugin-api', version:'2.0'
+    compile group: 'org.apache.maven', name: 'maven-project', version:'2.0'
+    compile group: 'org.apache.maven', name: 'maven-artifact', version:'2.0'
+    compile group: 'org.apache.maven.plugins', name: 'maven-antrun-plugin', version:'1.0'
+    compile group: 'xdoclet', name: 'xdoclet', version:'1.2.3'
+    compile group: 'xdoclet', name: 'xjavadoc', version:'1.1'
+    runtime group: 'xdoclet', name: 'xdoclet-xdoclet-module', version:'1.2.3'
+    runtime group: 'commons-collections', name: 'commons-collections', version:'2.1'
+    runtime group: 'commons-logging', name: 'commons-logging', version:'1.0.4'
+    runtime group: 'xdoclet', name: 'xdoclet-apache-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-bea-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-borland-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-caucho-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-de-locale', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-ejb-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-exolab-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-fr_FR-locale', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-hibernate-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-hp-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-ibm-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-java-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-jboss-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-jdo-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-jmx-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-jsf-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-libelis-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-macromedia-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-mockobjects-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-mvcsoft-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-mx4j-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-objectweb-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-openejb-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-oracle-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-orion-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-portlet-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-pramati-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-pt_BR-locale', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-solarmetric-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-spring-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-sun-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-sybase-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-tjdo-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-web-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-webwork-module', version:'1.2.3'
+    runtime group: 'xdoclet', name: 'xdoclet-wsee-module', version:'1.2.3'
+    runtime group: 'jboss', name: 'jboss-j2ee', version:'3.2.1'
+    runtime group: 'javax.servlet', name: 'servlet-api', version:'2.3'
+}
+
+jar {
+    includeEmptyDirs = false
+}
+
+task jarSources(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    includeEmptyDirs = false
+
+    from sourceSets.main.allSource
+}
+
+tasks.withType(FindBugs) {
+    // Unfortunately FindBugs will find a lot of problems with Groovy classes. We could filter out groovy source files,
+    // but since FindBugs operates on .class files, that filtering will be ineffective. Currently there are no java
+    // classes but that could change in the future.
+    // See https://stackoverflow.com/questions/22037499/using-excludes-config-in-findbugs-and-checkstyle-plugin-in-gradle
+    exclude '**/*.groovy'
+    classes = classes.filter {
+        !(it.path.contains(new File("classes/groovy/main").path) || it.path.contains(new File("classes/groovy/test").path))
+    }
+}
+
+// We want to force a specific version as part of our dependency resolution
+//configurations.all {
+//    resolutionStrategy {
+//        force 'org.codehaus.groovy:groovy-all:2.4.+'
+//    }
+//}
+
+artifacts {
+    publishableArtifacts jar, jarSources
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact tasks.jarSources
+        }
+    }
+
+    repositories {
+        maven {
+            mavenLocal()
+        }
+    }
+}
+
+build.dependsOn jar, jarSources
